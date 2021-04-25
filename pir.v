@@ -1,7 +1,7 @@
 module pir (
     clk, 
     stop_alarm,
-    pir_sersor_1,
+    pir_sensor_1,
     pir_sensor_2,
     pir_sensor_3,
     LED,  // On: motion, Off: no motion
@@ -23,9 +23,9 @@ input           pir_sensor_3;
 // Output Ports
 // ----------------
 
-output          LED;
-output          buzzer;
-output [20:0]   display_data;
+output reg         LED;
+output reg        buzzer;
+output reg [20:0]   display_data;
 
 // ----------------
 // Lacal parameters 
@@ -58,7 +58,7 @@ always @(posedge clk) begin
             LED <= 0;
             display_data <= 0;
             counter_buzzing <= 0;
-            fsm_state <= IDEL
+            fsm_state <= IDLE;
         end
 
         IDLE: begin

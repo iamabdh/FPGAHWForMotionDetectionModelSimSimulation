@@ -24,7 +24,11 @@ initial begin
     pir_sensor_1 = 'b1;
     #10
     pir_sensor_1 = 'b0;
-    #30
+    #50
+    stop_alarm ='b1;
+    #20
+    stop_alarm = 'b0;
+    #1000
     $stop;
 end
 endmodule   

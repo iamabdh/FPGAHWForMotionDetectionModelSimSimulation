@@ -1,0 +1,73 @@
+m255
+K4
+z2
+13
+!s112 1.1
+!i10d 8192
+!i10e 25
+!i10f 100
+cModel Technology
+dC:/Users/user/Desktop/task3
+vpir
+Z0 !s110 1619388972
+!i10b 1
+!s100 3TnCK1<ZndkYXLhANF^m10
+IWcEHKOLicBOnEeUa7N3XW0
+Z1 VDg1SIo80bB@j0V0VzS_@n1
+Z2 dC:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation
+w1619388606
+8C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/pir.v
+FC:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/pir.v
+L0 1
+Z3 OV;L;10.5b;63
+r1
+!s85 0
+31
+Z4 !s108 1619388972.000000
+!s107 C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/pir.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/pir.v|
+!i113 1
+Z5 o-work work
+Z6 tCvgOpt 0
+vtestbench
+R0
+!i10b 1
+!s100 iJ4ACP33Y29nLbTWM4W[g0
+Io<FTRjPhB2>27J?5RK]NQ3
+R1
+R2
+w1619388146
+8C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/testbench.v
+FC:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/testbench.v
+L0 3
+R3
+r1
+!s85 0
+31
+R4
+!s107 C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/testbench.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/testbench.v|
+!i113 1
+R5
+R6
+vtester
+R0
+!i10b 1
+!s100 NEFUo<;9C:SdPf9DoQSoi2
+ICU`5OmAd8G2_KSBHkn4>R3
+R1
+R2
+w1619388960
+8C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/tester.v
+FC:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/tester.v
+L0 3
+R3
+r1
+!s85 0
+31
+R4
+!s107 C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/tester.v|
+!s90 -reportprogress|300|-work|work|-stats=none|C:/Users/user/Desktop/project/FPGAHWForMotionDetectionModelSimSimulation/tester.v|
+!i113 1
+R5
+R6
