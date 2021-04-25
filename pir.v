@@ -47,7 +47,7 @@ reg [3:0] fsm_state = INIT;
 reg [6:0] counter_buzzing;
 
 // ----------------
-// Calculator Controller
+// Controller
 // ----------------
 
 always @(posedge clk) begin
