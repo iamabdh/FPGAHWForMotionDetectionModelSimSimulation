@@ -86,15 +86,15 @@ always @(posedge clk) begin
 
         BUZZRING : begin
             buzzer <= 1;
-            if (pir_sensor_1 == 1) begin
+            if (pir_sensor_1 >= 50) begin
                 LED[0] <=1;
                 nth_sensor_triggered[0] <=1;
             end
-            if (pir_sensor_2 == 1) begin
+            if (pir_sensor_2 >= 50) begin
                 LED[1] <=1;
                 nth_sensor_triggered[1] <=1;
             end
-            if (pir_sensor_3== 1) begin
+            if (pir_sensor_3 >= 50) begin
                 LED[2] <=1;
                 nth_sensor_triggered[2] <=1;
             end
