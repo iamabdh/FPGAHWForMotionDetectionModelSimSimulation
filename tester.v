@@ -2,12 +2,12 @@
 
 module tester
 (
-  output reg clk,
-  output reg turn,
-  output reg stop_alarm,
-  output reg pir_sensor_1,
-  output reg pir_sensor_2,
-  output reg pir_sensor_3
+  output reg        clk,
+  output reg        turn,
+  output reg        stop_alarm,
+  output reg [6:0]  pir_sensor_1,
+  output reg [6:0]  pir_sensor_2,
+  output reg [6:0]  pir_sensor_3
 );
 initial clk = 1'b0;
 always 
