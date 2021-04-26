@@ -65,6 +65,7 @@ always @(posedge clk) begin
             LED <= 0;
             display_data <= 0;
             counter_buzzing <= 0;
+            buzzer <=0;
             if (turn == 1) begin
                 fsm_state <= IDLE;
             end
