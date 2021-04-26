@@ -2,14 +2,14 @@
 
 module testbench();
 
-wire clk;
-wire turn;
-wire stop_alarm;
-wire pir_sensor_1;
-wire pir_sensor_2;
-wire pir_sensor_3;
-wire [2:0] LED;
-wire buzzer;
+wire        clk;
+wire        turn;
+wire        stop_alarm;
+wire [6:0]  pir_sensor_1;
+wire [6:0]  pir_sensor_2;
+wire [6:0]  pir_sensor_3;
+wire [2:0]  LED;
+wire        buzzer;
 wire [20:0] display_data;
 
 pir c1 (clk, turn, stop_alarm, pir_sensor_1, pir_sensor_2, pir_sensor_3, LED, buzzer, display_data);
