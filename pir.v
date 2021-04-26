@@ -47,6 +47,7 @@ localparam BUZZING_DELAY 	= 100;
 
 reg [3:0] fsm_state = INIT;
 reg [6:0] counter_buzzing;
+reg [2:0] nth_sensor_triggered;
 
 // ----------------
 // RAM  8x8
@@ -66,6 +67,7 @@ always @(posedge clk) begin
             display_data <= 0;
             counter_buzzing <= 0;
             buzzer <=0;
+            nth_sensor_triggered <=0;
             if (turn == 1) begin
                 fsm_state <= IDLE;
             end
@@ -86,13 +88,20 @@ always @(posedge clk) begin
             buzzer <= 1;
             if (pir_sensor_1 == 1) begin
                 LED[0] <=1;
+                nth_sensor_triggered[0] <=1;
             end
             if (pir_sensor_2 == 1) begin
                 LED[1] <=1;
+                nth_sensor_triggered[1] <=1;
             end
             if (pir_sensor_3== 1) begin
                 LED[2] <=1;
+                nth_sensor_triggered[2] <=1;
             end
+            
+            //  display how many sensor triggered
+            display_data[3:0] <= nth_sensor_triggered[0] + nth_sensor_triggered[1] + nth_sensor_triggered[2];
+
             counter_buzzing <= counter_buzzing + 1;
             if (counter_buzzing >= BUZZING_DELAY) begin
                 counter_buzzing <= 0;
@@ -109,6 +118,7 @@ always @(posedge clk) begin
         STOPING_ALARM: begin
             LED <= 0;
             buzzer <= 0;
+            nth_sensor_triggered <=0;
             fsm_state <= IDLE;
         end
     endcase
