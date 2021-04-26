@@ -79,8 +79,8 @@ always @(posedge clk) begin
                 // display some data while idling=> 
                 // threshold, threshold from  which sensor, 
                 // last measurment, last from  which sensor.
-                display_data[4:11] <= RAM[0];
-                display_data[12:15] <= RAM[1];
+                display_data[11:4] <= RAM[0];
+                display_data[15:12] <= RAM[1];
                  if (pir_sensor_1 >= 50 | pir_sensor_2 >= 50 | pir_sensor_3 >= 50) begin
                     fsm_state  <=  BUZZRING;
                 end 
@@ -109,16 +109,16 @@ always @(posedge clk) begin
             display_data[3:0] <= nth_sensor_triggered[0] + nth_sensor_triggered[1] + nth_sensor_triggered[2];
 
             // store threshold address 0 in RAM, address 1 store from which sensor 
-            if (pir_sensor_1 >= pir_sensor_2 && pir_sensor_1 >= pir_sensor_3 && pir_sensor_1 >= RAM[0]) begin
+            if (pir_sensor_1 >= pir_sensor_2 & pir_sensor_1 >= pir_sensor_3 & pir_sensor_1 >= RAM[0]) begin
                  RAM[0] <= pir_sensor_1;
                  RAM[1] <= 1;
             end
-            if (pir_sensor_2 >= pir_sensor_1 && pir_sensor_2 >= pir_sensor_3 && pir_sensor_2 >= RAM[0]) begin
+            if (pir_sensor_2 >= pir_sensor_1 & pir_sensor_2 >= pir_sensor_3 & pir_sensor_2 >= RAM[0]) begin
                  RAM[0] <= pir_sensor_2;
                  RAM[1] <= 2;
             end
             
-            if (pir_sensor_3 >= pir_sensor_1 && pir_sensor_3 >= pir_sensor_2 && pir_sensor_3 >= RAM[0]) begin
+            if (pir_sensor_3 >= pir_sensor_1 & pir_sensor_3 >= pir_sensor_2 & pir_sensor_3 >= RAM[0]) begin
                  RAM[0] <= pir_sensor_3;
                  RAM[1] <= 3;
             end
