@@ -27,7 +27,7 @@ initial begin
     pir_sensor_3 =  56;
     #100
     pir_sensor_1 = 0;
-    pir_sensor_2 = 0;
+    pir_sensor_3 = 0;
     #100
     turn ='b0;
     #20
