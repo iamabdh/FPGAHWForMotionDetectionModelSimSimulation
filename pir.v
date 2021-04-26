@@ -25,9 +25,9 @@ input           pir_sensor_3;
 // Output Ports
 // ----------------
 
-output reg         LED;
-output reg        buzzer;
-output reg [20:0]   display_data;
+output reg  [2:0]  LED;  
+output reg         buzzer;
+output reg [20:0]  display_data;
 
 // ----------------
 // Lacal parameters 
@@ -82,8 +82,16 @@ always @(posedge clk) begin
         end
 
         BUZZRING : begin
-            LED <= 1;
             buzzer <= 1;
+            if (pir_sensor_1 == 1) begin
+                LED[0] <=1;
+            end
+            if (pir_sensor_2 == 1) begin
+                LED[1] <=1;
+            end
+            if (pir_sensor_3== 1) begin
+                LED[2] <=1;
+            end
             counter_buzzing <= counter_buzzing + 1;
             if (counter_buzzing >= BUZZING_DELAY) begin
                 counter_buzzing <= 0;
