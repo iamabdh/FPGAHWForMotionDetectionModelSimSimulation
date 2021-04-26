@@ -1,5 +1,6 @@
 module pir (
     clk, 
+    turn,
     stop_alarm,
     pir_sensor_1,
     pir_sensor_2,
@@ -14,6 +15,7 @@ module pir (
 // ----------------
 
 input           clk;
+input           turn;
 input           stop_alarm;
 input           pir_sensor_1;
 input           pir_sensor_2;
@@ -63,14 +65,22 @@ always @(posedge clk) begin
             LED <= 0;
             display_data <= 0;
             counter_buzzing <= 0;
-            fsm_state <= IDLE;
+            if (turn == 1) begin
+                fsm_state <= IDLE;
+            end
         end
 
         IDLE: begin
-            if (pir_sensor_1 == 1 | pir_sensor_2 == 1 | pir_sensor_3 == 1) begin
-                fsm_state  <=  BUZZRING;
+            if (turn ==1) begin
+                 if (pir_sensor_1 == 1 | pir_sensor_2 == 1 | pir_sensor_3 == 1) begin
+                    fsm_state  <=  BUZZRING;
+                end 
+            end 
+            else if (turn == 0) begin
+                    fsm_state <= INIT; 
             end
         end
+
         BUZZRING : begin
             LED <= 1;
             buzzer <= 1;
@@ -82,6 +92,9 @@ always @(posedge clk) begin
             if (stop_alarm == 1) begin
                 counter_buzzing <= 0;
                 fsm_state <= STOPING_ALARM;
+            end 
+            else if (turn == 0) begin
+                fsm_state <= INIT; 
             end
         end
         STOPING_ALARM: begin
