@@ -17,9 +17,9 @@ module pir (
 input           clk;
 input           turn;
 input           stop_alarm;
-input           pir_sensor_1;
-input           pir_sensor_2;
-input           pir_sensor_3;
+input   [6:0]   pir_sensor_1;
+input   [6:0]   pir_sensor_2;
+input   [6:0]   pir_sensor_3;
 
 // ----------------
 // Output Ports
@@ -75,7 +75,7 @@ always @(posedge clk) begin
 
         IDLE: begin
             if (turn ==1) begin
-                 if (pir_sensor_1 == 1 | pir_sensor_2 == 1 | pir_sensor_3 == 1) begin
+                 if (pir_sensor_1 >= 50 | pir_sensor_2 >= 50 | pir_sensor_3 >= 50) begin
                     fsm_state  <=  BUZZRING;
                 end 
             end 
@@ -99,8 +99,11 @@ always @(posedge clk) begin
                 nth_sensor_triggered[2] <=1;
             end
             
-            //  display how many sensor triggered
+            //  display how many sensor triggered from 0 to 3 bit in display_data
             display_data[3:0] <= nth_sensor_triggered[0] + nth_sensor_triggered[1] + nth_sensor_triggered[2];
+
+            // store threshold address 0 in RAM, address 1 store from which sensor 
+
 
             counter_buzzing <= counter_buzzing + 1;
             if (counter_buzzing >= BUZZING_DELAY) begin

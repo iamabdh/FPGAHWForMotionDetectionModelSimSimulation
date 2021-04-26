@@ -17,17 +17,17 @@ begin
 end
 
 initial begin 
-    stop_alarm   = 'b0;
-    pir_sensor_1 = 'b0;
-    pir_sensor_2 = 'b0;
-    pir_sensor_3 = 'b0;
+    stop_alarm   = 0;
+    pir_sensor_1 = 0;
+    pir_sensor_2 = 0;
+    pir_sensor_3 = 0;
     turn  = 'b1;
     #50
-    pir_sensor_1 = 'b1;
-    pir_sensor_3 = 'b1;
+    pir_sensor_1 =  29;
+    pir_sensor_3 =  56;
     #100
-    pir_sensor_1 = 'b0;
-    pir_sensor_2 = 'b0;
+    pir_sensor_1 = 0;
+    pir_sensor_2 = 0;
     #100
     turn ='b0;
     #20
