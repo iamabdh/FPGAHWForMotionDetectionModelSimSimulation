@@ -68,7 +68,7 @@ always @(posedge clk) begin
             counter_buzzing <= 0;
             buzzer <=0;
             nth_sensor_triggered <=0;
-            RAM[6:0] <= 0;
+            RAM[7:0] <= 0;
             if (turn == 1) begin
                 fsm_state <= IDLE;
             end
