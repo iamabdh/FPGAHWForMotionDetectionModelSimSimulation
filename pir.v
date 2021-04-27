@@ -27,7 +27,7 @@ input   [6:0]   pir_sensor_3;
 
 output reg  [2:0]  LED;  
 output reg         buzzer;
-output reg [30:0]  display_data;
+output reg [31:0]  display_data;
 
 // ----------------
 // Lacal parameters 
@@ -91,7 +91,7 @@ always @(posedge clk) begin
                 display_data[11:8]  <=  RAM[1];
                 display_data[19:12] <=  RAM[2];
                 display_data[23:20] <=  RAM[3];
-                display_data[30:23] <=  RAM[4];
+                display_data[31:24] <=  RAM[4];
                  if (pir_sensor_1 >= 50 | pir_sensor_2 >= 50 | pir_sensor_3 >= 50) begin
                      display_data <=0;
                     fsm_state  <=  BUZZRING;
@@ -104,23 +104,24 @@ always @(posedge clk) begin
 
         BUZZRING : begin
             buzzer <= 1;
+
             if (pir_sensor_1 >= 50) begin
                 LED[0] <=1;
                 nth_sensor_triggered[0] <=1;
-                RAM[2] = pir_sensor_1;
-                RAM[3] = 1;
+                RAM[2] <= pir_sensor_1;
+                RAM[3] <= 1;
             end
             if (pir_sensor_2 >= 50) begin
                 LED[1] <=1;
                 nth_sensor_triggered[1] <=1;
-                RAM[2] = pir_sensor_2;
-                RAM[3] = 2;
+                RAM[2] <= pir_sensor_2;
+                RAM[3] <= 2;
             end
             if (pir_sensor_3 >= 50) begin
                 LED[2] <=1;
                 nth_sensor_triggered[2] <=1;
-                RAM[2] = pir_sensor_3;
-                RAM[3] = 3;
+                RAM[2] <= pir_sensor_3;
+                RAM[3] <= 3;
             end
             
             //  store total nth sensor triggered
@@ -144,7 +145,7 @@ always @(posedge clk) begin
             counter_buzzing <= counter_buzzing + 1;
             if (counter_buzzing >= BUZZING_DELAY) begin
                 counter_buzzing <= 0;
-                fsm_state <= STOPING_ALARM;
+                fsm_state <= STOPING_ALARM_DEVICE;
             end
             if (stop_alarm == 1 | turn == 0 ) begin
                 counter_buzzing <= 0;
