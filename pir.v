@@ -52,15 +52,15 @@ output reg  [7:0]   check_counter_total;
 // Lacal parameters 
 // ----------------
 
-localparam INIT             = 4'b0001;
-localparam IDLE             = 4'b0010;
-localparam BUZZRING         = 4'b0100;
-localparam STOPING_ALARM_DEVICE    = 4'b1000;
+localparam INIT                 = 4'b0001;
+localparam IDLE                 = 4'b0010;
+localparam BUZZING              = 4'b0100;
+localparam STOPING_ALARM_DEVICE = 4'b1000;
 
 // Period of Operation (in clock cycles)
 localparam BUZZING_DELAY 	= 100;
-localparam COUNTER_AVERAGE = 2;
-localparam COUNTER_AVERAGE_TOTAL = 9;
+localparam COUNTER_AVERAGE = 4;
+localparam COUNTER_AVERAGE_TOTAL = 17;
 
 // ----------------
 // Registers 
@@ -124,7 +124,7 @@ always @(posedge clk) begin
                 display_average_2           <=  RAM[6];
                 display_average_3           <=  RAM[7];
                 
-                // this blocks will excute at each for cycles for 4 times, compute
+                // this blocks will excute at each four cycles for 4 times, compute
                 // the average for each sensor, and store in adderss 5, 6, 7 for each sesnors
                 counter_average <= counter_average + 1;
                 counter_average_total <= counter_average_total + 1;
@@ -152,7 +152,7 @@ always @(posedge clk) begin
 
                 // this if statement checks if the average bigger than 50
                  if ( RAM[5] >= 50 | RAM[6] >= 50 |  RAM[7] >= 50) begin
-                    fsm_state  <=  BUZZRING;
+                    fsm_state  <=  BUZZING;
                 end 
             end 
             else if (turn == 0) begin
@@ -160,7 +160,7 @@ always @(posedge clk) begin
             end
         end
 
-        BUZZRING : begin
+        BUZZING : begin
             buzzer <= 1;
             // check from which sensors the system trigred and produce output in LED,
             //  and store last of them in RAM address 2 and from which of them in address 3
