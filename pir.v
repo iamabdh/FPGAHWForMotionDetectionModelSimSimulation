@@ -8,9 +8,7 @@ module pir (
     LED,  // On: motion, Off: no motion
     buzzer, // On: motion, Off: no motion 
     display_threshold,
-    display_from_threshold,
     display_last_measurment,
-    display_from_measurment,
     display_total_sensors,
     display_average_1,
     display_average_2,
@@ -37,10 +35,9 @@ input   [6:0]   pir_sensor_3;
 output reg  [2:0]   LED;  
 output reg          buzzer;
 output reg  [7:0]   display_threshold;
-output reg  [3:0]   display_from_threshold;
 output reg  [7:0]   display_last_measurment;
 output reg  [3:0]   display_from_measurment;
-output reg  [7:0]   display_total_sensors;
+output reg  [7:0]   display_total_sensors = 0;
 output reg  [7:0]   display_average_1; 
 output reg  [7:0]   display_average_2;
 output reg  [7:0]   display_average_3;   
@@ -74,17 +71,27 @@ reg [9:0] average_pir_2;
 reg [9:0] average_pir_3;
 reg [2:0] nth_sensor_triggered;
 reg [7:0] total; // used for total number of sensor are triggered 
+reg [7:0] average_1;
+reg [7:0] average_2;
+reg [7:0] average_3;
 // ----------------
-// RAM  8x8
+// RAM  8x2
 // ----------------
-reg [7:0] RAM [0:7];
+reg [7:0] RAM [0:1];
+initial $readmemeb("ram.mif", RAM);
 
-integer i;
-initial begin
-    for(i=0; i<8; i = i+1) begin
-        RAM[i] = 0; // initial all data to zero
-    end
-end
+
+
+
+
+
+
+
+
+
+
+
+
 
 // ----------------
 // Controller
@@ -113,19 +120,18 @@ always @(posedge clk) begin
         IDLE: begin
             if (turn ==1) begin
                 // display some data while idling=> 
-                // threshold, threshold from  which sensor, 
-                // last measurment, last from  which sensor.
+                // threshold, 
+                // last measurment.
+                // total sensor trigerred
                 display_threshold           <=  RAM[0];
-                display_from_threshold      <=  RAM[1];
-                display_last_measurment     <=  RAM[2];
-                display_from_measurment     <=  RAM[3];
-                display_total_sensors       <=  RAM[4];
-                display_average_1           <=  RAM[5];
-                display_average_2           <=  RAM[6];
-                display_average_3           <=  RAM[7];
+                display_last_measurment     <=  RAM[1];
+                display_total_sensors       <=  display_total_sensors;
+                display_average_1           <=  average_1;
+                display_average_2           <=  average_2;
+                display_average_3           <=  average_3;
                 
                 // this blocks will excute at each four cycles for 4 times, compute
-                // the average for each sensor, and store in adderss 5, 6, 7 for each sesnors
+                // the average for each sensor
                 counter_average <= counter_average + 1;
                 counter_average_total <= counter_average_total + 1;
                 check_counter <= counter_average;
@@ -138,9 +144,9 @@ always @(posedge clk) begin
                     counter_average <= 1; 
                 end
                 if (counter_average_total >= COUNTER_AVERAGE_TOTAL) begin
-                    RAM[5] <= average_pir_1 >> 2;
-                    RAM[6] <= average_pir_2 >> 2;
-                    RAM[7] <= average_pir_3 >> 2;
+                    average_1 <= average_pir_1 >> 2;
+                    average_2 <= average_pir_2 >> 2;
+                    average_3 <= average_pir_3 >> 2;
                     average_pir_1 <= 0;
                     average_pir_2 <= 0;
                     average_pir_3 <= 0;
@@ -151,7 +157,7 @@ always @(posedge clk) begin
 
 
                 // this if statement checks if the average bigger than 50
-                 if ( RAM[5] >= 50 | RAM[6] >= 50 |  RAM[7] >= 50) begin
+                 if ( average_1 >= 50 | average_2 >= 50 |  average_3 >= 50) begin
                     fsm_state  <=  BUZZING;
                 end 
             end 
@@ -164,43 +170,37 @@ always @(posedge clk) begin
             buzzer <= 1;
             // check from which sensors the system trigred and produce output in LED,
             //  and store last of them in RAM address 2 and from which of them in address 3
-            if (RAM[5] >= 50) begin
+            if (average_1 >= 50) begin
                 LED[0] <=1;
                 nth_sensor_triggered[0] <=1; 
-                RAM[2] <= RAM[5];
-                RAM[3] <= 1;
+                RAM[1] <= average_1;
             end
             
-            if (RAM[6] >= 50) begin
+            if (average_2 >= 50) begin
                 LED[1] <= 1;
                 nth_sensor_triggered[1] <= 1;
-                RAM[2] <= RAM[6];
-                RAM[3] <= 2;
+                RAM[1] <= average_2;
             end
 
-            if (RAM[7] >= 50) begin
+            if (average_3 >= 50) begin
                 LED[2] <=1;
                 nth_sensor_triggered[2] <=1;
-                RAM[2] <= RAM[7];
-                RAM[3] <= 3;
+                RAM[1] <= average_3;
             end
             
             //  store total nth sensor triggered
             total <= nth_sensor_triggered[0] + nth_sensor_triggered[1] + nth_sensor_triggered[2];
 
             // store threshold address in 0, address 1 store from which sensor 
-            if (RAM[5] >= RAM[6] & RAM[5] >= RAM[7] & RAM[5] >= RAM[0]) begin
-                 RAM[0] <= RAM[5];
-                 RAM[1] <= 1;
+            if (average_1 >= average_2 & average_1 >= average_3 & average_1 >= RAM[0]) begin
+                 RAM[0] <= average_1;
             end
-            if (RAM[6] >= RAM[5] & RAM[6] >= RAM[7] & RAM[6] >= RAM[0]) begin
-                 RAM[0] <= RAM[6];
-                 RAM[1] <= 2;
+            if (average_2 >= average_1 & average_2 >= average_2 & average_3 >= RAM[0]) begin
+                 RAM[0] <= average_2;
             end
             
-            if (RAM[7] >= RAM[5] & RAM[7] >= RAM[6] & RAM[7] >= RAM[0]) begin
-                 RAM[0] <= RAM[7];
-                 RAM[1] <= 3;
+            if (average_3 >= average_1 & average_3 >= average_ 2 & average_3 >= RAM[0]) begin
+                 RAM[0] <= average_3;
             end
             
             // this block shows in this state will left in 100 cycles  
@@ -217,10 +217,7 @@ always @(posedge clk) begin
             end 
         end
         STOPING_ALARM_DEVICE: begin
-            RAM[4] <= RAM[4] + total; // store number of sensor are triggried
-            RAM[5] <= 0;
-            RAM[6] <= 0;
-            RAM[7] <= 0;
+            display_total_sensors <= display_total_sensors + total; //  number of sensor are triggried
             fsm_state <= INIT;
         end
     endcase
