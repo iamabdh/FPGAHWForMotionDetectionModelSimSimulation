@@ -138,7 +138,7 @@ always @(posedge clk) begin
 
         IDLE: begin
             if (turn ==1) begin       
-                         
+
                 // this blocks will excute at each four cycles for 4 times, compute
                 // the average for each sensor
                 counter_average <= counter_average + 1;
