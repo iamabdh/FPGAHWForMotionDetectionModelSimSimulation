@@ -227,6 +227,9 @@ always @(posedge clk) begin
         end
         STOPING_ALARM_DEVICE: begin
             nth_total <= nth_total + total; //  number of sensor are triggried
+            average_1 <= 0;
+            average_2 <= 0;
+            average_3 <= 0;
             fsm_state <= INIT;
         end
     endcase
