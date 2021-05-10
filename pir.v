@@ -7,12 +7,12 @@ module pir (
     pir_sensor_3,
     LED,  // On: motion, Off: no motion
     buzzer, // On: motion, Off: no motion 
-    display_threshold,
-    display_last_measurment,
-    display_total_sensors,
-    display_average_1,
-    display_average_2,
-    display_average_3,
+    display_threshold_1,
+    display_threshold_2,
+    display_last_measurment_1,
+    display_last_measurment_2,
+    display_total_sensors_1,
+    display_total_sensors_2,
     check_counter,
     check_counter_total
 );
@@ -34,15 +34,14 @@ input   [6:0]   pir_sensor_3;
 
 output reg  [2:0]   LED;  
 output reg          buzzer;
-output reg  [7:0]   display_threshold;
-output reg  [7:0]   display_last_measurment;
-output reg  [3:0]   display_from_measurment;
-output reg  [7:0]   display_total_sensors = 0;
-output reg  [7:0]   display_average_1; 
-output reg  [7:0]   display_average_2;
-output reg  [7:0]   display_average_3;   
-output reg  [7:0]   check_counter;
-output reg  [7:0]   check_counter_total;
+output      [6:0]   display_threshold_1;
+output      [6:0]   display_threshold_2;
+output      [6:0]   display_last_measurment_1;
+output      [6:0]   display_last_measurment_2;
+output      [6:0]   display_total_sensors_1;
+output      [6:0]   display_total_sensors_2;
+output reg  [6:0]   check_counter;
+output reg  [6:0]   check_counter_total;
 
 
 // ----------------
@@ -66,30 +65,50 @@ reg [3:0] fsm_state = INIT;
 reg [6:0] counter_buzzing;
 reg [6:0] counter_average;
 reg [6:0] counter_average_total;
-reg [9:0] average_pir_1;
-reg [9:0] average_pir_2;
-reg [9:0] average_pir_3;
+reg [8:0] average_pir_1;
+reg [8:0] average_pir_2;
+reg [8:0] average_pir_3;
 reg [2:0] nth_sensor_triggered;
-reg [7:0] total; // used for total number of sensor are triggered 
-reg [7:0] average_1;
-reg [7:0] average_2;
-reg [7:0] average_3;
+reg [6:0] total; // used for total number of sensor are triggered
+reg [7:0] nth_total =0; 
+reg [6:0] average_1;
+reg [6:0] average_2;
+reg [6:0] average_3;
 // ----------------
-// RAM  8x2
+// RAM  7x2
 // ----------------
 reg [7:0] RAM [0:1];
-initial $readmemeb("ram.mif", RAM);
+initial $readmemh("ram.mif", RAM);
 
+// --------------
+// instanstate with bch module
+// --------------
+bch hex0 (
+.s(RAM[0]),
+.d(display_threshold_1)
+);
+bch hex1 (
+.s(RAM[0][7:4]),
+.d(display_threshold_2)
+);
+bch hex2 (
+.s(RAM[1]),
+.d(display_last_measurment_1)
+);
 
+bch hex3 (
+.s(RAM[1][7:4]),
+.d(display_last_measurment_2)
+);
+bch hex4 (
+.s(nth_total),
+.d(display_total_sensors_1)
+);
 
-
-
-
-
-
-
-
-
+bch hex5(
+.s(nth_total[7:4]),
+.d(display_total_sensors_2)
+);
 
 
 
@@ -118,18 +137,8 @@ always @(posedge clk) begin
         end
 
         IDLE: begin
-            if (turn ==1) begin
-                // display some data while idling=> 
-                // threshold, 
-                // last measurment.
-                // total sensor trigerred
-                display_threshold           <=  RAM[0];
-                display_last_measurment     <=  RAM[1];
-                display_total_sensors       <=  display_total_sensors;
-                display_average_1           <=  average_1;
-                display_average_2           <=  average_2;
-                display_average_3           <=  average_3;
-                
+            if (turn ==1) begin       
+                         
                 // this blocks will excute at each four cycles for 4 times, compute
                 // the average for each sensor
                 counter_average <= counter_average + 1;
@@ -199,7 +208,7 @@ always @(posedge clk) begin
                  RAM[0] <= average_2;
             end
             
-            if (average_3 >= average_1 & average_3 >= average_ 2 & average_3 >= RAM[0]) begin
+            if (average_3 >= average_1 & average_3 >= average_2 & average_3 >= RAM[0]) begin
                  RAM[0] <= average_3;
             end
             
@@ -217,7 +226,7 @@ always @(posedge clk) begin
             end 
         end
         STOPING_ALARM_DEVICE: begin
-            display_total_sensors <= display_total_sensors + total; //  number of sensor are triggried
+            nth_total <= nth_total + total; //  number of sensor are triggried
             fsm_state <= INIT;
         end
     endcase
